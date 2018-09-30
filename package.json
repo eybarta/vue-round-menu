@@ -2,11 +2,17 @@
   "name": "vue-round-menu",
   "version": "0.0.1",
   "description": "Responsive Round Menu built with Vue",
-  "main": "RoundMenu.vue",
-  "private": true,
+  "main": "dist/vue-round-menu.js",
+  "entry": "/src/RoundMenu.vue",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name vue-round-menu ./src/RoundMenu.vue"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eybarta/vue-round-menu.git"
   },
   "dependencies": {
     "animejs": "^2.2.0",
