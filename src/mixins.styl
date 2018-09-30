@@ -1,0 +1,17 @@
+center(dir=both)
+	position absolute
+	if (dir==vertical)
+		top 50%
+		transform translateZ(0) translateY(-50%)
+	else if (dir==horizontal)
+		left 50%
+		transform translateZ(0) translateX(-50%)
+	else
+		top 50%
+		left 50%
+		transform translateZ(0) translate(-50%,-50%)
+
+
+// ALIAS
+self-center()
+	center(both)
