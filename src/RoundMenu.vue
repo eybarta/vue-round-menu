@@ -2,7 +2,7 @@
 	<div @click="toggleMenu" :class="['menu', mode]">
 		<span v-if="isDesktop" class="menu--half"></span>
 		<transition-group class="menu--mid" tag="div" name="fade-down" appear>
-			<div key="hamburger" v-if="true" ref="hamb" class="hamburger"></div>
+			<div key="hamburger" v-if="true" ref="hamb" :class="['hamburger', showHamburger ? 'show' : '']"></div>
 			<img v-if="logo && mode==='open'" v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}" key="logo" class="logo" :src="logo" :alt="menu.label" :title="menu.label" />
 			<ul v-if="mode=='open'" key="menu">
 				<li
@@ -75,7 +75,8 @@ export default {
 			menuopen: null,
 			activeitem: 'home',
 			scrollTrig: -1,
-			resizeTrig: -1
+			resizeTrig: -1,
+			showHamburger: true
 		}
 	},
 	destroyed() {
@@ -116,6 +117,7 @@ export default {
 				autoplay: false,
 				direction: "normal"
 			})
+			console.log("MENU ANIM>> ", this.menuanim);
 			let _toheight = this.isDesktop ? this.$el.style.height : this.isPortrait ? this.viewportHeight*1.2 : this.viewportWidth*1.2,
 			_towidth = this.isDesktop ? this.viewportWidth :  this.isPortrait ? this.viewportHeight*1.2 : this.viewportWidth*1.2;
 			// console.log('_towidth > ', _towidth);
@@ -246,10 +248,14 @@ export default {
 			}
 		},
 		openMenu() {
+			console.log("OPEN MENU");
 			if (this.mode!=='open') {
+				this.showHamburger = false;
 				this.mode = "open"
 				this.menuanim.restart()
-				console.log("OPEN MENU");
+				setTimeout(function() {
+					this.showHamburger = true;
+				}.bind(this), 1300)
 			}
 		},
 		closeMenu() {
@@ -291,7 +297,12 @@ export default {
 		}, 300),
 		resizeHandler: throttle(function() {
 			this.resizeTrig = new Date().getTime()
-			this.toggleMenu(true);
+			this.closeMenu();
+			this.$nextTick(function() {
+				setTimeout(function() {
+					this.initAnime();
+				}.bind(this), 33)
+			})
 		}, 300)
 	},
 	computed: {
@@ -306,7 +317,7 @@ export default {
 			return document.documentElement.clientHeight > document.documentElement.clientWidth
 		},
 		sectionOffsets() {
-			let trig = this.scrollTrig;
+			let trig = this.resizeTrig || this.scrollTrig;
 			return Array.prototype.map.call(this.sectionsToObserve, section =>  {
 				return {id:section.id, top:section.getBoundingClientRect().top,bottom:section.getBoundingClientRect().bottom}
 			})
@@ -327,7 +338,7 @@ export default {
 			return window.innerHeight
 		},
 		scrollPosition() {
-			let trig = this.scrollTrig;
+			let trig = this.resizeTrig || this.scrollTrig;
 			return window.scrollY || document.documentElement.scrollTop
 		}
 	}
@@ -376,8 +387,11 @@ li
 		max-height 70%
 	+below(1025px)
 		border-radius rad
+		background: var(--bg-color-closed);
 		&.open
 			transition background 0.5s ease-out
+			+below(1025px)
+				background: var(--bg-color-open);
 	.hamburger
 		center()
 		width 22px
@@ -390,7 +404,7 @@ li
 			transparent 55%, transparent 90%,
 			white 90%, white 100%
 		);
-		transition left 0.4s ease-out
+		transition left 0.4s ease-out, opacity 0.4s 0.2s ease-out
 
 
 	&--mid
@@ -422,6 +436,10 @@ li
 		mix-blend-mode initial
 		.hamburger
 			will-change left, top, transform
+			opacity 0
+			&.show
+				opacity 1
+				transition opacity 0.2s ease-out
 			+above(1024px)
 				center()
 				left 97%
@@ -434,8 +452,8 @@ li
 					top 3vh
 					left 94vw
 				+landscape()
-					top 10vw
-					left 84vw
+					top 0vw
+					left 96vw
 			transition left 0.2s 1.2s ease-out,  top 0.2s 1.2s ease-out,  transform 0.2s 1.2s ease-out
 		.menu--half
 			background: var(--bg-color-open);
