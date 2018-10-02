@@ -1,11 +1,14 @@
 <template>
 	<div @click="toggleMenu" :class="['menu', mode]">
 		<span v-if="isDesktop" class="menu--half"></span>
+		<!-- <div class="menu--mid"> -->
+
 		<transition-group class="menu--mid" tag="div" name="fade-down" appear>
 			<div key="hamburger" v-if="true" ref="hamb" :class="['hamburger', showHamburger ? 'show' : '']"></div>
 			<img v-if="logo && mode==='open'" v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}" key="logo" class="logo" :src="logo" :alt="menu.label" :title="menu.label" />
-			<ul v-if="mode=='open'" key="menu">
+		<transition-group :key="menu" tag="ul" name="stag-down" appear>
 				<li
+					v-if="showMenuItems"
 					v-for="(item,index) in menu"
 					:key="item.label"
 					v-text="item.label"
@@ -13,7 +16,9 @@
 					:class="[activeitem===item.anchor ? 'active' : '']"
 					>
 				</li>
-			</ul>
+			</transition-group>
+		<!-- </div> -->
+
 		</transition-group>
 		<span v-if="isDesktop" class="menu--half"></span>
 	</div>
@@ -76,7 +81,9 @@ export default {
 			activeitem: 'home',
 			scrollTrig: -1,
 			resizeTrig: -1,
-			showHamburger: true
+			showHamburger: true,
+			showMenuItems: false,
+			showLogo: false,
 		}
 	},
 	destroyed() {
@@ -255,16 +262,24 @@ export default {
 				this.menuanim.restart()
 				setTimeout(function() {
 					this.showHamburger = true;
-				}.bind(this), 1300)
+					this.showMenuItems = true;
+					this.showLogo = true;
+				}.bind(this), 2200)
 			}
 		},
 		closeMenu() {
 			if (this.mode!=='closed') {
+				this.showMenuItems = false;
+
+				// this.showHamburger = false;
 				this.mode = "closed"
-				this.menuanim.seek(1600);
+				this.menuanim.seek(800);
 				this.menuanim.reverse()
 				this.menuanim.play()
 				console.log("CLOSE MENU");
+				setTimeout(function() {
+					this.showHamburger = true;
+				}.bind(this), 400)
 			}
 		},
 		anchorScrollCB(el) {
@@ -362,6 +377,23 @@ export default {
 	&-leave
 		opacity 1
 		transform translateY(0)
+.stag-down
+	&-enter-active
+		for num in (1...10)
+			&:nth-child({num})
+				transition opacity 0.2s unit(num*60, 'ms') ease-out, transform 0.2s unit(num*60, 'ms') ease-out
+	&-leave-active
+		transition opacity 0.1s
+	&-enter
+	&-leave-to
+		opacity 0
+		transform translateY(-50%)
+	&-leave-to
+		transform translateY(0)
+	&-enter-to
+	&-leave
+		opacity 1
+		transform translateY(0)
 
 
 size = 46px
@@ -388,11 +420,23 @@ li
 	+below(1025px)
 		border-radius rad
 		background: var(--bg-color-closed);
+		.logo
+			min-width 50vw
+			position absolute
+			bottom 2vh
+			transition opacity 0.1s
+			+portrait()
+				max-height 5vh
+				min-width initial
 		&.open
 			transition background 0.5s ease-out
-			+below(1025px)
-				background: var(--bg-color-open);
+			background: var(--bg-color-open);
+			.logo
+				transition opacity 0.2s 1.2s ease-out, transform 0.2s 0.5s ease-out !important
+
+
 	.hamburger
+		opacity 0
 		center()
 		width 22px
 		height 16px
@@ -404,7 +448,10 @@ li
 			transparent 55%, transparent 90%,
 			white 90%, white 100%
 		);
-		transition left 0.4s ease-out, opacity 0.4s 0.2s ease-out
+		transition left 0.4s ease-out, opacity 0.2s ease-out
+		&.show
+				opacity 1
+				transition opacity 0.2s ease-out
 
 
 	&--mid
@@ -435,11 +482,7 @@ li
 		opacity 1
 		mix-blend-mode initial
 		.hamburger
-			will-change left, top, transform
-			opacity 0
-			&.show
-				opacity 1
-				transition opacity 0.2s ease-out
+			will-change opacity, left, top, transform
 			+above(1024px)
 				center()
 				left 97%
@@ -475,8 +518,7 @@ li
 				width 100%
 				flex-direction column-reverse
 				justify-content space-evenly
-				img
-					min-width 50vw
+
 			ul
 				display flex
 				align-items center
