@@ -2,8 +2,8 @@
   "name": "vue-round-menu",
   "version": "0.0.2",
   "description": "Responsive Round Menu built with Vue",
-  "main": "dist/vue-round-menu.js",
-  "entry": "/src/RoundMenu.vue",
+  "main": "./dist/vue-round-menu.common.js",
+  "entry": "./src/index.js",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -27,5 +27,12 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.5.17"
-  }
+  },
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ]
 }
