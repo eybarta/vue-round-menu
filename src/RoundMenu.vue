@@ -32,7 +32,6 @@ export const throttle = function(func, wait = 100) {
 		}
 	};
 };
-
 import anime from 'animejs'
 
 console.log("throttle  > ", throttle);
