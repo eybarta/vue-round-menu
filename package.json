@@ -1,8 +1,8 @@
 {
   "name": "vue-round-menu",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Responsive Round Menu built with Vue",
-  "main": "./dist/vue-round-menu.common.js",
+  "main": "./src/RoundMenu.vue",
   "entry": "./src/index.js",
   "private": false,
   "scripts": {
