@@ -472,6 +472,7 @@ li
 			transition border 0.5s 0.2s ease-out, min-width 0.5s 1.5s ease-out, height 0.5s 1.5s ease-out
 			+below(1025px)
 				min-width auto
+				width 100%
 				flex-direction column-reverse
 				justify-content space-evenly
 				img
@@ -490,7 +491,7 @@ li
 					position relative
 					color: var(--item-color);
 					+below(1025px)
-						font-size responsive 24px 32px
+						font-size 20px
 						margin-bottom 2vh
 					&:after
 						content ''
