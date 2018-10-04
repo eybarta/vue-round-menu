@@ -39,7 +39,6 @@ const throttle = function(func, wait = 100) {
 
 import anime from 'animejs'
 import cssVars from 'css-vars-ponyfill';
-console.log("throttle  > ", throttle);
 export default {
 	props: {
 			menu: {
@@ -82,6 +81,13 @@ export default {
 			showHamburger: true,
 			showMenuItems: false,
 			showLogo: false,
+			timers: {
+				openmenu: -1,
+				closemenu: -1,
+				hamburger: -1,
+				anim: -1,
+
+			}
 		}
 	},
 	destroyed() {
@@ -96,8 +102,6 @@ export default {
 	},
 	methods: {
 		stylusizeJSVariables() {
-			// let scope = document.createElement("style");
-			// scope.type = "text/css";
 			cssVars({
 				shadowDOM  : true,
 				updateDOM    : true,
@@ -111,18 +115,16 @@ export default {
 					'bg-color-open': this.bgColorOpen,
 				},
 			})
-			// scope.innerHTML = `
-			// :root {
-			// 	--color: red;
-			// 	--item-color: ${this.itemColor};
-			// 	--item-active-color: ${this.itemActiveColor};
-			// 	--item-border-color: ${this.itemBorderColor};
-			// 	--bg-color-closed: ${this.bgColorClosed};
-			// 	--bg-color-open: ${this.bgColorOpen};
-			// }`;
-			// document.head.prepend(scope);
+		},
+		clearAllTimers() {
+			let timers = this.timers;
+			clearTimeout(timers.openmenu);
+			clearTimeout(timers.closemenu);
+			clearTimeout(timers.hamburger);
+			clearTimeout(timers.anim);
 		},
 		initAnime() {
+			this.clearAllTimers();
 			let easing = "easeOutCubic";
 			let direction = "normal";
 			this.$el.style.left = '100%';
@@ -135,12 +137,9 @@ export default {
 				autoplay: false,
 				direction: "normal"
 			})
-			console.log("MENU ANIM>> ", this.menuanim);
 			let _toheight = this.isDesktop ? this.$el.style.height : this.isPortrait ? this.viewportHeight*1.2 : this.viewportWidth*1.2,
 			_towidth = this.isDesktop ? this.viewportWidth :  this.isPortrait ? this.viewportHeight*1.2 : this.viewportWidth*1.2;
-			// console.log('_towidth > ', _towidth);
 			let _toradius = _towidth/2;
-
 			if (this.isDesktop) {
 				this.menuanim
 				.add({
@@ -257,7 +256,6 @@ export default {
 			}
 		},
 		toggleMenu(close) {
-			console.log('toggle menu >> ', close);
 			if ((typeof close === 'boolean' && !!close) || this.mode!=='closed') {
 				this.closeMenu();
 			}
@@ -266,12 +264,12 @@ export default {
 			}
 		},
 		openMenu() {
-			console.log("OPEN MENU");
 			if (this.mode!=='open') {
+				this.clearAllTimers();
 				this.showHamburger = false;
 				this.mode = "open"
 				this.menuanim.restart()
-				setTimeout(function() {
+				this.timers.openmenu = setTimeout(function() {
 					this.showHamburger = true;
 					this.showMenuItems = true;
 					this.showLogo = true;
@@ -280,16 +278,17 @@ export default {
 		},
 		closeMenu() {
 			if (this.mode!=='closed') {
+				this.clearAllTimers();
 				this.showMenuItems = false;
+				this.timers.closemenu = setTimeout(function() {
+					this.mode = "closed"
+					this.menuanim.seek(1200);
+					this.menuanim.reverse()
+					this.menuanim.play()
+					this.timers.hamburger = setTimeout(function() {
+						this.showHamburger = true;
+					}.bind(this), 400)
 
-				// this.showHamburger = false;
-				this.mode = "closed"
-				this.menuanim.seek(800);
-				this.menuanim.reverse()
-				this.menuanim.play()
-				console.log("CLOSE MENU");
-				setTimeout(function() {
-					this.showHamburger = true;
 				}.bind(this), 400)
 			}
 		},
@@ -315,9 +314,6 @@ export default {
 			// use last filtered section
 			if (!!filtered.length) {
 				this.activeitem = filtered.slice(-1)[0].id
-				console.log(" this.activeitem >> ", this.activeitem);
-				console.log(" scrooltop >> ", this.scrollPosition);
-
 			}
 			this.checkPosition()
 		}, 300),
@@ -325,7 +321,7 @@ export default {
 			this.resizeTrig = new Date().getTime()
 			this.closeMenu();
 			this.$nextTick(function() {
-				setTimeout(function() {
+				this.timers.anim = setTimeout(function() {
 					this.initAnime();
 				}.bind(this), 33)
 			})
@@ -343,7 +339,7 @@ export default {
 			return document.documentElement.clientHeight > document.documentElement.clientWidth
 		},
 		sectionOffsets() {
-			let trig = this.resizeTrig || this.scrollTrig;
+			let trig = this.resizeTrig + this.scrollTrig;
 			return Array.prototype.map.call(this.sectionsToObserve, section =>  {
 				return {id:section.id, top:section.getBoundingClientRect().top,bottom:section.getBoundingClientRect().bottom}
 			})
@@ -364,7 +360,7 @@ export default {
 			return window.innerHeight
 		},
 		scrollPosition() {
-			let trig = this.resizeTrig || this.scrollTrig;
+			let trig = this.resizeTrig + this.scrollTrig;
 			return window.scrollY || document.documentElement.scrollTop
 		}
 	}
@@ -394,7 +390,9 @@ export default {
 			&:nth-child({num})
 				transition opacity 0.2s unit(num*60, 'ms') ease-out, transform 0.2s unit(num*60, 'ms') ease-out
 	&-leave-active
-		transition opacity 0.1s
+		for num in (1...10)
+			&:nth-child({num})
+				transition opacity 0.1s unit(num*40, 'ms') ease-out, transform 0.1s unit(num*40, 'ms') ease-out
 	&-enter
 	&-leave-to
 		opacity 0
@@ -481,10 +479,10 @@ li
 		width 51%
 		transition background 0s ease-out
 		&:first-child
-			left 0
+			left 0.5px
 			border-radius rad 0 0 rad
 		&:nth-child(3)
-			right 0
+			right 0.5px
 			border-radius 0 rad rad 0
 			width 50%
 			&:before
