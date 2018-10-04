@@ -555,6 +555,7 @@ li
 					color: var(--item-color);
 					+below(1025px)
 						font-size 20px
+						text-align center
 						text-transform uppercase
 						margin-bottom 2vh
 					&:after
