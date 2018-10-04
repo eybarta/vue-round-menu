@@ -6,7 +6,7 @@
 		<transition-group class="menu--mid" tag="div" name="fade-down" appear>
 			<div key="hamburger" v-if="true" ref="hamb" :class="['hamburger', showHamburger ? 'show' : '']"></div>
 			<img v-if="logo && mode==='open'" v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}" key="logo" class="logo" :src="logo" :alt="menu.label" :title="menu.label" />
-		<transition-group :key="menu" tag="ul" name="stag-down" appear>
+		<transition-group key="menu" tag="ul" name="stag-down" appear>
 				<li
 					v-if="showMenuItems"
 					v-for="(item,index) in menu"
@@ -23,7 +23,6 @@
 		<span v-if="isDesktop" class="menu--half"></span>
 	</div>
 </template>
-
 <script>
 
 export const throttle = function(func, wait = 100) {
@@ -534,6 +533,7 @@ li
 					color: var(--item-color);
 					+below(1025px)
 						font-size 20px
+						text-transform uppercase
 						margin-bottom 2vh
 					&:after
 						content ''
