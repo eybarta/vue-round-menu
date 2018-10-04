@@ -10,13 +10,14 @@ export default {
 	data() {
 		return {
 			menuArr:[
-				{"label":"Home","anchor":"home"},
-				{"label":"Basitleştir","anchor":"video"},
-				{"label":"Genel Bakış","anchor":"overview"},
-				{"label":"Ürünler","anchor":"features"},
-				{"label":"Araştırma","anchor":"research"},
-				{"label":"Galeri","anchor":"gallery"},
-				{"label":"Yalnızca Daha Fazla Bilgi","anchor":"moreinfo"}]
+				"first item", "Second Item", "About", "Products", "Media Gallery"]
+				// {"label":"Home","anchor":"home"},
+				// {"label":"Basitleştir","anchor":"video"},
+				// {"label":"Genel Bakış","anchor":"overview"},
+				// {"label":"Ürünler","anchor":"features"},
+				// {"label":"Araştırma","anchor":"research"},
+				// {"label":"Galeri","anchor":"gallery"},
+				// {"label":"Yalnızca Daha Fazla Bilgi","anchor":"moreinfo"}]
 		}
 	},
 	components: {

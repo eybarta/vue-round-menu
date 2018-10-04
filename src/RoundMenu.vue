@@ -10,9 +10,9 @@
 				<li
 					v-if="showMenuItems"
 					v-for="(item,index) in menu"
-					:key="item.label"
-					v-text="item.label"
-					v-scroll-to="{el:`#${item.anchor}`, onDone: anchorScrollCB, offset: index<=1 ? 1 : 200}"
+					:key="item.label || item"
+					v-text="item.label || item"
+					v-scroll-to="{el:`#${item.anchor || trimify(item)}`, onDone: anchorScrollCB, offset: index<=1 ? 1 : 200}"
 					:class="[activeitem===item.anchor ? 'active' : '']"
 					>
 				</li>
@@ -117,26 +117,27 @@ export default {
 			})
 		},
 		clearAllTimers() {
+			// console.log('clear timers');
 			let timers = this.timers;
 			clearTimeout(timers.openmenu);
 			clearTimeout(timers.closemenu);
 			clearTimeout(timers.hamburger);
 			clearTimeout(timers.anim);
 		},
-		initAnime() {
-			this.clearAllTimers();
-			let easing = "easeOutCubic";
-			let direction = "normal";
+		setAnimeProps() {
 			this.$el.style.left = '100%';
 			this.$el.style.top = '0%';
 			this.$el.style.height = '46px';
 			this.$el.style.borderRadius = '23px'
 			this.$el.style.transform = 'translateX(-150%) translateY(50%)';
 			this.menuanim = anime.timeline({
-				easing,
+				easing: 'easeOutCubic',
 				autoplay: false,
 				direction: "normal"
 			})
+		},
+		initAnime() {
+			this.setAnimeProps();
 			let _toheight = this.isDesktop ? this.$el.style.height : this.isPortrait ? this.viewportHeight*1.2 : this.viewportWidth*1.2,
 			_towidth = this.isDesktop ? this.viewportWidth :  this.isPortrait ? this.viewportHeight*1.2 : this.viewportWidth*1.2;
 			let _toradius = _towidth/2;
@@ -264,6 +265,7 @@ export default {
 			}
 		},
 		openMenu() {
+			// console.log("OPEN MENU");
 			if (this.mode!=='open') {
 				this.clearAllTimers();
 				this.showHamburger = false;
@@ -277,6 +279,7 @@ export default {
 			}
 		},
 		closeMenu() {
+			// console.log("CLOSE MENU");
 			if (this.mode!=='closed') {
 				this.clearAllTimers();
 				this.showMenuItems = false;
@@ -306,16 +309,18 @@ export default {
 		},
 		scrollHandler: throttle(function() {
 			this.scrollTrig = new Date().getTime()
-			let sections = this.sectionOffsets;
-			let mid = this.viewportMid;
-			let filtered = sections.filter(section=> {
-				return section.bottom > mid && section.top < mid
-			})
-			// use last filtered section
-			if (!!filtered.length) {
-				this.activeitem = filtered.slice(-1)[0].id
+			if (this.scrollTrig-this.resizeTrig>500) {
+				let sections = this.sectionOffsets;
+				let mid = this.viewportMid;
+				let filtered = sections.filter(section=> {
+					return section.bottom > mid && section.top < mid
+				})
+				// use last filtered section
+				if (!!filtered.length) {
+					this.activeitem = filtered.slice(-1)[0].id
+				}
+				this.checkPosition()
 			}
-			this.checkPosition()
 		}, 300),
 		resizeHandler: throttle(function() {
 			this.resizeTrig = new Date().getTime()
@@ -325,7 +330,13 @@ export default {
 					this.initAnime();
 				}.bind(this), 33)
 			})
-		}, 300)
+		}, 300),
+		trimify(item) {
+			if (typeof item === 'string') {
+				return item.toLowerCase().replace(/\s/g, '_')
+			}
+			return ''
+		}
 	},
 	computed: {
 		isDesktop() {
@@ -540,6 +551,7 @@ li
 					padding 0 10px 4px
 					font-size 14px
 					position relative
+					text-transform capitalize
 					color: var(--item-color);
 					+below(1025px)
 						font-size 20px
