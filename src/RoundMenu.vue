@@ -25,7 +25,7 @@
 </template>
 <script>
 
-export const throttle = function(func, wait = 100) {
+const throttle = function(func, wait = 100) {
 	let timer = null;
 	return function(...args) {
 		if (timer === null) {
@@ -36,16 +36,15 @@ export const throttle = function(func, wait = 100) {
 		}
 	};
 };
-import anime from 'animejs'
 
+import anime from 'animejs'
+import cssVars from 'css-vars-ponyfill';
 console.log("throttle  > ", throttle);
 export default {
 	props: {
 			menu: {
 				type: Array,
-				default: function() {
-					return[{"label":"Home","anchor":"home"},{"label":"Basitleştir","anchor":"video"},{"label":"Genel Bakış","anchor":"overview"},{"label":"Ürünler","anchor":"features"},{"label":"Araştırma","anchor":"research"},{"label":"Galeri","anchor":"gallery"},{"label":"Yalnızca Daha Fazla Bilgi","anchor":"moreinfo"}]
-				}
+				required: true
 			},
 			bgColorClosed: {
 				type: String,
@@ -97,18 +96,31 @@ export default {
 	},
 	methods: {
 		stylusizeJSVariables() {
-			let scope = document.createElement("style");
-			scope.type = "text/css";
-			scope.innerHTML = `
-			:root {
-				--color: red;
-				--item-color: ${this.itemColor};
-				--item-active-color: ${this.itemActiveColor};
-				--item-border-color: ${this.itemBorderColor};
-				--bg-color-closed: ${this.bgColorClosed};
-				--bg-color-open: ${this.bgColorOpen};
-			}`;
-			document.head.prepend(scope);
+			// let scope = document.createElement("style");
+			// scope.type = "text/css";
+			cssVars({
+				shadowDOM  : true,
+				updateDOM    : true,
+				updateURLs   : true,
+				preserve: true,
+				variables: {
+					'item-color': this.itemColor,
+					'item-active-color': this.itemActiveColor,
+					'item-border-color': this.itemBorderColor,
+					'bg-color-closed': this.bgColorClosed,
+					'bg-color-open': this.bgColorOpen,
+				},
+			})
+			// scope.innerHTML = `
+			// :root {
+			// 	--color: red;
+			// 	--item-color: ${this.itemColor};
+			// 	--item-active-color: ${this.itemActiveColor};
+			// 	--item-border-color: ${this.itemBorderColor};
+			// 	--bg-color-closed: ${this.bgColorClosed};
+			// 	--bg-color-open: ${this.bgColorOpen};
+			// }`;
+			// document.head.prepend(scope);
 		},
 		initAnime() {
 			let easing = "easeOutCubic";
