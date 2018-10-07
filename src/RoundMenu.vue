@@ -25,13 +25,13 @@
 </template>
 <script>
 import Vue from 'vue';
-// import VueScrollTo from 'vue-scrollto'
+import VueScrollTo from 'vue-scrollto'
 
-// Vue.use(VueScrollTo, {
-// 	duration: 500,
-// 	easing: "ease",
-// 	offset: 200
-// })
+Vue.use(VueScrollTo, {
+	duration: 500,
+	easing: "ease",
+	offset: 200
+})
 
 const throttle = function(func, wait = 100) {
 	let timer = null;
@@ -94,7 +94,6 @@ export default {
 				closemenu: -1,
 				hamburger: -1,
 				anim: -1,
-
 			}
 		}
 	},
@@ -308,7 +307,7 @@ export default {
 
 		},
 		checkPosition() {
-			if (this.activeitem==='home' && this.scrollPosition<200) {
+			if (this.isDesktop && this.activeitem==='home' && this.scrollPosition<200) {
 				this.openMenu();
 			}
 			else {
