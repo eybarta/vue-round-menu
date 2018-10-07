@@ -24,6 +24,14 @@
 	</div>
 </template>
 <script>
+import Vue from 'vue';
+// import VueScrollTo from 'vue-scrollto'
+
+// Vue.use(VueScrollTo, {
+// 	duration: 500,
+// 	easing: "ease",
+// 	offset: 200
+// })
 
 const throttle = function(func, wait = 100) {
 	let timer = null;
@@ -441,7 +449,6 @@ li
 		border-radius rad
 		background: var(--bg-color-closed);
 		.logo
-			min-width 50vw
 			position absolute
 			bottom 2vh
 			transition opacity 0.1s
