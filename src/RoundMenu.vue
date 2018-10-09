@@ -12,8 +12,8 @@
 					v-for="(item,index) in menu"
 					:key="item.label || item"
 					v-text="item.label || item"
-					v-scroll-to="{el:`#${item.anchor || trimify(item)}`, onDone: anchorScrollCB, offset: index<=1 ? 1 : 200}"
-					:class="[activeitem===item.anchor ? 'active' : '']"
+					v-scroll-to="{el:`#${anchorify(item)}`, onDone: anchorScrollCB, offset: item.offset || 1}"
+					:class="[activeitem===(item.anchor||trimify(item)) ? 'active' : '']"
 					>
 				</li>
 			</transition-group>
@@ -361,6 +361,9 @@ export default {
 				return item.toLowerCase().replace(/\s/g, '_')
 			}
 			return ''
+		},
+		anchorify(item) {
+			return typeof item === 'string' ? this.trimify(item) : item.anchor;
 		}
 	},
 	computed: {

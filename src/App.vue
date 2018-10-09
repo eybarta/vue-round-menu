@@ -1,6 +1,9 @@
 <template>
 	<div>
 		<round-menu :menu="menuArr" bg-color-closed="#ff6600"></round-menu>
+		<section v-for="item in menuArr" :key="item" :id="itemId(item)">
+			<h4 v-text="item"></h4>
+		</section>
 	</div>
 </template>
 
@@ -22,10 +25,18 @@ export default {
 	},
 	components: {
 		RoundMenu
+	},
+	methods: {
+		itemId(item) {
+			return item.toLowerCase().replace(/\s/g, '_');
+		}
 	}
 }
 </script>
 <style lang="stylus">
-
+section
+	height 80vh
+	width 100%
+	border-bottom 3px solid rgba(#ff6600, 0.3)
 </style>
 
