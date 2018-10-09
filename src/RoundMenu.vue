@@ -142,6 +142,15 @@ export default {
 				autoplay: false,
 				direction: "normal"
 			})
+			this.menuanim.complete = this.animComplete;
+			this.menuanim.begin = this.animeBegan;
+		},
+		animeBegan(anim) {
+			console.log("ANIM BEGAN > ", anim);
+		},
+		animComplete(anim) {
+			console.log("ANIM COMPLETE > ", anim);
+			this.openMenuAfter();
 		},
 		initAnime() {
 			this.setAnimeProps();
@@ -165,10 +174,7 @@ export default {
 							value: "0%",
 							delay: 500,
 							easing: "easeInOutQuad",
-							duration: 300,
-							// elasticity: function(el, i, l) {
-							// 	return (200 + i * 200);
-							// }
+							duration: 300
 						}
 					],
 					width: {
@@ -186,7 +192,7 @@ export default {
 					borderBottomLeftRadius: {
 						value: [23,0]
 					},
-					offset: 1650
+					offset: 1100
 				})
 				.add({
 					targets: this.$el.querySelectorAll('.menu--half:nth-child(3)'),
@@ -196,7 +202,7 @@ export default {
 					borderBottomRightRadius: {
 						value: [23,0]
 					},
-					offset: 1650
+					offset: 1100
 				})
 			}
 			else {
@@ -206,60 +212,61 @@ export default {
 					targets: this.$el,
 					left: {
 						value: [this.$el.style.left, '50%'],
-						duration: 600
+						duration: 400,
+						easing: 'easeOutQuad'
 					},
 					top: {
 						value: [this.$el.style.top, '50%'],
-						duration: 600
+						duration: 400,
+						easing: 'easeOutQuad'
 					},
 					borderRadius: [
 						{
 							value: [this.$el.style.borderRadius, `${_toradius}px`],
-							duration: 600
+							duration: 400
 						},
 						{
 							value: [`${_toradius}px`, `0px`],
-							delay: 500,
-							duration: 600
+							delay: 400,
+							duration: 200
 						}
 					],
 					height: [
 						{
 							value: [this.$el.style.height, `${_toheight}px`],
-							duration: 600,
-							delay: 600
+							duration: 300,
+							delay: 450
 						},
 						{
 							value: [`${_toheight}px`, `${this.viewportHeight}px`],
-							duration: 600,
-							delay: 600
+							duration: 300,
+							delay: 450
 						}
 					],
 					width: [
 						{
 							value: [this.$el.style.height, `${_towidth}px`],
-							delay: 600,
-							duration: 400
+							delay: 450,
+							duration: 300
 						},
 						{
 							value: [`${_towidth}px`, `${this.viewportWidth}px`],
-							delay: 600,
-							duration: 200
+							delay: 750,
+							duration: 100
 						}
 					],
-					translateY: [
-						{
-							value: "-50%",
-							delay: 0,
-							easing: "easeOutQuad",
-							duration: 400,
-							// elasticity: function(el, i, l) {
-							// 	return (200 + i * 200);
-							// }
-						}
-					],
-
-					translateX: "-50%"
+					translateY: {
+						value: '-50%',
+						duration: 400,
+						easing: 'easeOutQuad'
+					},
+					translateX: {
+						value: '-50%',
+						duration: 400,
+						easing: 'easeOutQuad'
+					},
+					// translateY: "-50%",
+					// translateX: "-50%"
 				})
 			}
 		},
@@ -275,14 +282,24 @@ export default {
 			// console.log("OPEN MENU");
 			if (this.mode!=='open') {
 				this.clearAllTimers();
-				this.showHamburger = false;
 				this.mode = "open"
+				if(!this.isDesktop) {
+					this.showHamburger = false;
+				}
 				this.menuanim.restart()
-				this.timers.openmenu = setTimeout(function() {
-					this.showHamburger = true;
-					this.showMenuItems = true;
-					this.showLogo = true;
-				}.bind(this), 2200)
+				// this.timers.openmenu = setTimeout(function() {
+				// 	console.log("REST OF ANIM");
+				// 	this.showHamburger = true;
+				// 	this.showMenuItems = true;
+				// 	this.showLogo = true;
+				// }.bind(this), 1600)
+			}
+		},
+		openMenuAfter() {
+			if (this.mode==='open') {
+				this.showHamburger = true;
+				this.showMenuItems = true;
+				this.showLogo = true;
 			}
 		},
 		closeMenu() {
@@ -292,14 +309,15 @@ export default {
 				this.showMenuItems = false;
 				this.timers.closemenu = setTimeout(function() {
 					this.mode = "closed"
-					this.menuanim.seek(1200);
-					this.menuanim.reverse()
+					this.showHamburger = false;
+					this.menuanim.seek(this.isDesktop ? 1200 : 800);
 					this.menuanim.play()
+					this.menuanim.reverse()
 					this.timers.hamburger = setTimeout(function() {
 						this.showHamburger = true;
-					}.bind(this), 400)
+					}.bind(this), 750)
 
-				}.bind(this), 400)
+				}.bind(this), 200)
 			}
 		},
 		anchorScrollCB(el) {
@@ -406,11 +424,11 @@ export default {
 	&-enter-active
 		for num in (1...10)
 			&:nth-child({num})
-				transition opacity 0.2s unit(num*60, 'ms') ease-out, transform 0.2s unit(num*60, 'ms') ease-out
+				transition opacity 0.2s unit(num*80, 'ms'), transform 0.2s unit(num*80, 'ms')
 	&-leave-active
 		for num in (1...10)
 			&:nth-child({num})
-				transition opacity 0.1s unit(num*40, 'ms') ease-out, transform 0.1s unit(num*40, 'ms') ease-out
+				transition opacity 0.1s unit(num*20, 'ms') ease-out, transform 0.1s unit(num*20, 'ms') ease-out
 	&-enter
 	&-leave-to
 		opacity 0
@@ -441,6 +459,13 @@ li
 	height size
 	font-family Helvetica, arial
 	opacity 0.9
+	tap-highlight-color transparent
+	user-select none
+	touch-callout none
+	*
+		touch-callout none
+		user-select none
+		tap-highlight-color transparent
 	.logo
 		max-width 174px
 		max-height 70%
@@ -458,8 +483,7 @@ li
 			transition background 0.5s ease-out
 			background: var(--bg-color-open);
 			.logo
-				transition opacity 0.2s 1.2s ease-out, transform 0.2s 0.5s ease-out !important
-
+				transition opacity 0.2s 1.6s ease-out, transform 0.2s 1.5s ease-out !important
 
 	.hamburger
 		opacity 0
@@ -474,13 +498,13 @@ li
 			transparent 55%, transparent 90%,
 			white 90%, white 100%
 		);
-		transition left 0.4s ease-out, opacity 0.2s ease-out
+		transition opacity 0.2s ease-out
 		&.show
-				opacity 1
-				transition opacity 0.2s ease-out
+			opacity 1
 
 
 	&--mid
+		user-select none
 		margin auto
 		height 32%
 		width 50%
@@ -512,6 +536,7 @@ li
 			+above(1024px)
 				center()
 				left 97%
+				transition left 0.4s 1s ease
 			+below(1025px)
 				position absolute
 				top 27vh
@@ -523,7 +548,7 @@ li
 				+landscape()
 					top 0vw
 					left 96vw
-			transition left 0.2s 1.2s ease-out,  top 0.2s 1.2s ease-out,  transform 0.2s 1.2s ease-out
+			// transition left 0.2s 1.2s ease-out,  top 0.2s 1.2s ease-out,  transform 0.2s 1.2s ease-out
 		.menu--half
 			background: var(--bg-color-open);
 			transition background 0.2s 1s ease-out
