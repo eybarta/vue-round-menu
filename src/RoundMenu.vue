@@ -134,9 +134,9 @@ export default {
 		setAnimeProps() {
 			this.$el.style.left = '100%';
 			this.$el.style.top = '0%';
-			this.$el.style.height = '46px';
-			this.$el.style.borderRadius = '23px'
-			this.$el.style.transform = 'translateX(-150%) translateY(50%)';
+			this.$el.style.height = `${this.menuSize}px`;
+			this.$el.style.borderRadius = `${this.menuSize/2}px`;
+			this.$el.style.transform = !this.isDesktop && !this.isPortrait ? 'translateX(-125%) translateY(25%)' : 'translateX(-150%) translateY(50%)';
 			this.menuanim = anime.timeline({
 				easing: 'easeOutCubic',
 				autoplay: false,
@@ -401,6 +401,12 @@ export default {
 		scrollPosition() {
 			let trig = this.resizeTrig + this.scrollTrig;
 			return window.scrollY || document.documentElement.scrollTop
+		},
+		menuSize() {
+			let w = this.viewportWidth,
+			h = this.viewportHeight,
+			m = Math.max(w,h)
+			return m<815 && w>h ? 36 : 46;
 		}
 	}
 }
@@ -479,6 +485,7 @@ li
 			position absolute
 			bottom 2vh
 			transition opacity 0.1s
+			max-height 8vmin
 			+portrait()
 				max-height 5vh
 				min-width initial
@@ -491,8 +498,7 @@ li
 	.hamburger
 		opacity 0
 		center()
-		width 22px
-		height 16px
+
 		background: linear-gradient(
 			to bottom,
 			white, white 10%,
@@ -504,6 +510,12 @@ li
 		transition opacity 0.2s ease-out
 		&.show
 			opacity 1
+	&.closed .hamburger
+		width 48%
+		height 35%
+	&.open .hamburger
+		width 22px
+		height 16px
 
 
 	&--mid
@@ -592,6 +604,8 @@ li
 						text-align center
 						text-transform uppercase
 						margin-bottom 2vh
+					+below(815px, orientation: landscape)
+						font-size
 					&:after
 						content ''
 						center(horizontal)
