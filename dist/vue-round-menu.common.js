@@ -1161,12 +1161,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules//.cache//vue-loader","cacheIdentifier":"821e75ee-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=574f2da4&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['menu', _vm.mode],on:{"click":_vm.toggleMenu}},[(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e(),_c('transition-group',{staticClass:"menu--mid",attrs:{"tag":"div","name":"fade-down","appear":""}},[(true)?_c('div',{key:"hamburger",ref:"hamb",class:['hamburger', _vm.showHamburger ? 'show' : '']}):undefined,(_vm.logo && _vm.mode==='open')?_c('img',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:'#home', onDone: _vm.anchorScrollCB, offset:1}),expression:"{el:'#home', onDone: anchorScrollCB, offset:1}"}],key:"logo",staticClass:"logo",attrs:{"src":_vm.logo,"alt":_vm.menu.label,"title":_vm.menu.label}}):_vm._e(),_c('transition-group',{key:"menu",attrs:{"tag":"ul","name":"stag-down","appear":""}},_vm._l((_vm.menu),function(item,index){return (_vm.showMenuItems)?_c('li',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:("#" + (_vm.anchorify(item))), onDone: _vm.anchorScrollCB, offset: item.offset || 1}),expression:"{el:`#${anchorify(item)}`, onDone: anchorScrollCB, offset: item.offset || 1}"}],key:item.label || item,class:[_vm.activeitem===(item.anchor||_vm.trimify(item)) ? 'active' : ''],domProps:{"textContent":_vm._s(item.label || item)}}):_vm._e()}))],1),(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e()],1)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules//.cache//vue-loader","cacheIdentifier":"0076eba9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=688c2154&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['menu', _vm.mode],on:{"click":_vm.toggleMenu}},[(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e(),_c('div',{staticClass:"menu--mid"},[(true)?_c('div',{key:"hamburger",ref:"hamb",class:['hamburger', _vm.showHamburger ? 'show' : '']}):undefined,(!!_vm.logo && _vm.mode==='open')?_c('img',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:'#home', onDone: _vm.anchorScrollCB, offset:1}),expression:"{el:'#home', onDone: anchorScrollCB, offset:1}"}],key:"logo",class:['logo', _vm.showLogo ? 'show' : ''],attrs:{"src":_vm.logo,"alt":_vm.menu.label,"title":_vm.menu.label}}):_vm._e(),_c('transition-group',{key:"menu",attrs:{"tag":"ul","name":"stag-down","appear":""}},_vm._l((_vm.menu),function(item){return (_vm.showMenuItems)?_c('li',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:("#" + (_vm.anchorify(item))), onStart: _vm.anchorScrollStart, onDone: _vm.anchorScrollCB, offset: item.offset || 1}),expression:"{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"}],key:item.label || item,class:[_vm.activeitem===(item.anchor||_vm.trimify(item)) ? 'active' : ''],domProps:{"textContent":_vm._s(item.label || item)}}):_vm._e()}))],1),(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=574f2da4&
+// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=688c2154&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.anchor.js
 var es6_string_anchor = __webpack_require__("8449");
@@ -2506,6 +2506,12 @@ function getFullUrl$1(url) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 external_commonjs_vue_commonjs2_vue_root_Vue_default.a.use(vue_scrollto_default.a, {
@@ -2551,7 +2557,7 @@ var throttle = function throttle(func) {
     },
     logo: {
       type: String,
-      default: '/img/logo.png'
+      default: '/img/logo.svg'
     },
     itemColor: {
       type: String,
@@ -2577,6 +2583,7 @@ var throttle = function throttle(func) {
       showHamburger: true,
       showMenuItems: false,
       showLogo: false,
+      inAnchorscroll: false,
       timers: {
         openmenu: -1,
         closemenu: -1,
@@ -2622,9 +2629,9 @@ var throttle = function throttle(func) {
     setAnimeProps: function setAnimeProps() {
       this.$el.style.left = '100%';
       this.$el.style.top = '0%';
-      this.$el.style.height = '46px';
-      this.$el.style.borderRadius = '23px';
-      this.$el.style.transform = 'translateX(-150%) translateY(50%)';
+      this.$el.style.height = "".concat(this.menuSize, "px");
+      this.$el.style.borderRadius = "".concat(this.menuSize / 2, "px");
+      this.$el.style.transform = !this.isDesktop && !this.isPortrait ? 'translateX(-125%) translateY(25%)' : 'translateX(-150%) translateY(50%)';
       this.menuanim = anime_min_default.a.timeline({
         easing: 'easeOutCubic',
         autoplay: false,
@@ -2699,11 +2706,16 @@ var throttle = function throttle(func) {
             duration: 400,
             easing: 'easeOutQuad'
           },
-          top: {
+          top: [{
             value: [this.$el.style.top, '50%'],
             duration: 400,
             easing: 'easeOutQuad'
-          },
+          }, {
+            value: 0,
+            delay: 400,
+            duration: 100,
+            easing: 'easeOutQuad'
+          }],
           borderRadius: [{
             value: [this.$el.style.borderRadius, "".concat(_toradius, "px")],
             duration: 400
@@ -2730,11 +2742,16 @@ var throttle = function throttle(func) {
             delay: 750,
             duration: 100
           }],
-          translateY: {
+          translateY: [{
             value: '-50%',
             duration: 400,
             easing: 'easeOutQuad'
-          },
+          }, {
+            value: 0,
+            delay: 400,
+            duration: 100,
+            easing: 'easeOutQuad'
+          }],
           translateX: {
             value: '-50%',
             duration: 400,
@@ -2753,7 +2770,6 @@ var throttle = function throttle(func) {
       }
     },
     openMenu: function openMenu() {
-      // console.log("OPEN MENU");
       if (this.mode !== 'open') {
         this.clearAllTimers();
         this.mode = "open";
@@ -2762,12 +2778,7 @@ var throttle = function throttle(func) {
           this.showHamburger = false;
         }
 
-        this.menuanim.restart(); // this.timers.openmenu = setTimeout(function() {
-        // 	console.log("REST OF ANIM");
-        // 	this.showHamburger = true;
-        // 	this.showMenuItems = true;
-        // 	this.showLogo = true;
-        // }.bind(this), 1600)
+        this.menuanim.restart();
       }
     },
     openMenuAfter: function openMenuAfter() {
@@ -2778,13 +2789,13 @@ var throttle = function throttle(func) {
       }
     },
     closeMenu: function closeMenu() {
-      // console.log("CLOSE MENU");
       if (this.mode !== 'closed') {
         this.clearAllTimers();
         this.showMenuItems = false;
+        this.showHamburger = false;
         this.timers.closemenu = setTimeout(function () {
           this.mode = "closed";
-          this.showHamburger = false;
+          this.showLogo = false;
           this.menuanim.seek(this.isDesktop ? 1200 : 800);
           this.menuanim.play();
           this.menuanim.reverse();
@@ -2792,10 +2803,23 @@ var throttle = function throttle(func) {
             this.showHamburger = true;
           }.bind(this), 750);
         }.bind(this), 200);
+
+        if (!!this.isMobile && !this.isPortait && !this.inAnchorscroll) {
+          console.log("scroll to show menu");
+          setTimeout(function () {
+            this.$scrollTo(this.$el, 200, {
+              offset: -20
+            });
+          }.bind(this), 1450);
+        }
       }
     },
     anchorScrollCB: function anchorScrollCB(el) {
       this.activeitem = el.id;
+      this.inAnchorscroll = false;
+    },
+    anchorScrollStart: function anchorScrollStart() {
+      this.inAnchorscroll = true;
     },
     checkPosition: function checkPosition() {
       if (this.isDesktop && this.activeitem === 'home' && this.scrollPosition < 200) {
@@ -2871,15 +2895,21 @@ var throttle = function throttle(func) {
     },
     viewportWidth: function viewportWidth() {
       var trig = this.resizeTrig;
-      return document.documentElement.offsetWidth || window.innerWidth;
+      return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     },
     viewportHeight: function viewportHeight() {
       var trig = this.resizeTrig;
-      return window.innerHeight;
+      return Math.min(document.documentElement.clientHeight, window.innerHeight || 0);
     },
     scrollPosition: function scrollPosition() {
       var trig = this.resizeTrig + this.scrollTrig;
       return window.scrollY || document.documentElement.scrollTop;
+    },
+    menuSize: function menuSize() {
+      var w = this.viewportWidth,
+          h = this.viewportHeight,
+          m = Math.max(w, h);
+      return m < 815 && w > h ? 36 : 46;
     }
   }
 });

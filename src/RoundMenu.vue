@@ -1,25 +1,31 @@
 <template>
 	<div @click="toggleMenu" :class="['menu', mode]">
 		<span v-if="isDesktop" class="menu--half"></span>
-		<!-- <div class="menu--mid"> -->
-
-		<transition-group class="menu--mid" tag="div" name="fade-down" appear>
-			<div key="hamburger" v-if="true" ref="hamb" :class="['hamburger', showHamburger ? 'show' : '']"></div>
-			<img v-if="logo && mode==='open'" v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}" key="logo" class="logo" :src="logo" :alt="menu.label" :title="menu.label" />
+		<!-- <transition-group class="menu--mid" tag="div" name="fade-down" appear> -->
+			<div class="menu--mid">
+			<div v-if="true" key="hamburger" ref="hamb" :class="['hamburger', showHamburger ? 'show' : '']"></div>
+			<img
+			v-if="!!logo && mode==='open'"
+			v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}"
+			key="logo"
+			:class="['logo', showLogo ? 'show' : '']"
+			:src="logo"
+			:alt="menu.label"
+			:title="menu.label" />
 		<transition-group key="menu" tag="ul" name="stag-down" appear>
 				<li
 					v-if="showMenuItems"
-					v-for="(item,index) in menu"
+					v-for="item in menu"
 					:key="item.label || item"
 					v-text="item.label || item"
-					v-scroll-to="{el:`#${anchorify(item)}`, onDone: anchorScrollCB, offset: item.offset || 1}"
+					v-scroll-to="{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"
 					:class="[activeitem===(item.anchor||trimify(item)) ? 'active' : '']"
 					>
 				</li>
 			</transition-group>
 		<!-- </div> -->
-
-		</transition-group>
+</div>
+		<!-- </transition-group> -->
 		<span v-if="isDesktop" class="menu--half"></span>
 	</div>
 </template>
@@ -63,7 +69,7 @@ export default {
 			},
 			logo: {
 				type: String,
-				default: '/img/logo.png'
+				default: '/img/logo.svg'
 			},
 			itemColor: {
 				type: String,
@@ -89,6 +95,7 @@ export default {
 			showHamburger: true,
 			showMenuItems: false,
 			showLogo: false,
+			inAnchorscroll: false,
 			timers: {
 				openmenu: -1,
 				closemenu: -1,
@@ -215,11 +222,19 @@ export default {
 						duration: 400,
 						easing: 'easeOutQuad'
 					},
-					top: {
-						value: [this.$el.style.top, '50%'],
-						duration: 400,
-						easing: 'easeOutQuad'
-					},
+					top: [
+						{
+							value: [this.$el.style.top, '50%'],
+							duration: 400,
+							easing: 'easeOutQuad'
+						},
+						{
+							value: 0,
+							delay: 400,
+							duration: 100,
+							easing: 'easeOutQuad'
+						}
+					],
 					borderRadius: [
 						{
 							value: [this.$el.style.borderRadius, `${_toradius}px`],
@@ -255,11 +270,19 @@ export default {
 							duration: 100
 						}
 					],
-					translateY: {
-						value: '-50%',
-						duration: 400,
-						easing: 'easeOutQuad'
-					},
+					translateY: [
+						{
+							value: '-50%',
+							duration: 400,
+							easing: 'easeOutQuad'
+						},
+						{
+							value: 0,
+							delay: 400,
+							duration: 100,
+							easing: 'easeOutQuad'
+						}
+					],
 					translateX: {
 						value: '-50%',
 						duration: 400,
@@ -279,7 +302,6 @@ export default {
 			}
 		},
 		openMenu() {
-			// console.log("OPEN MENU");
 			if (this.mode!=='open') {
 				this.clearAllTimers();
 				this.mode = "open"
@@ -287,12 +309,6 @@ export default {
 					this.showHamburger = false;
 				}
 				this.menuanim.restart()
-				// this.timers.openmenu = setTimeout(function() {
-				// 	console.log("REST OF ANIM");
-				// 	this.showHamburger = true;
-				// 	this.showMenuItems = true;
-				// 	this.showLogo = true;
-				// }.bind(this), 1600)
 			}
 		},
 		openMenuAfter() {
@@ -303,13 +319,13 @@ export default {
 			}
 		},
 		closeMenu() {
-			// console.log("CLOSE MENU");
 			if (this.mode!=='closed') {
 				this.clearAllTimers();
 				this.showMenuItems = false;
+				this.showHamburger = false;
 				this.timers.closemenu = setTimeout(function() {
 					this.mode = "closed"
-					this.showHamburger = false;
+					this.showLogo = false;
 					this.menuanim.seek(this.isDesktop ? 1200 : 800);
 					this.menuanim.play()
 					this.menuanim.reverse()
@@ -318,11 +334,20 @@ export default {
 					}.bind(this), 750)
 
 				}.bind(this), 200)
+				if (!!this.isMobile && !this.isPortait && !this.inAnchorscroll) {
+					console.log("scroll to show menu");
+					setTimeout(function() {
+						this.$scrollTo(this.$el, 200, {offset:-20})
+					}.bind(this), 1450)
+				}
 			}
 		},
 		anchorScrollCB(el) {
 			this.activeitem = el.id;
-
+			this.inAnchorscroll = false;
+		},
+		anchorScrollStart() {
+			this.inAnchorscroll = true;
 		},
 		checkPosition() {
 			if (this.isDesktop && this.activeitem==='home' && this.scrollPosition<200) {
@@ -392,11 +417,11 @@ export default {
 		},
 		viewportWidth() {
 			let trig = this.resizeTrig;
-			return document.documentElement.offsetWidth || window.innerWidth
+			return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		},
 		viewportHeight() {
 			let trig = this.resizeTrig;
-			return window.innerHeight
+			return Math.min(document.documentElement.clientHeight, window.innerHeight || 0)
 		},
 		scrollPosition() {
 			let trig = this.resizeTrig + this.scrollTrig;
@@ -414,17 +439,17 @@ export default {
 <style lang="stylus">
 @import './mixins'
 
-.fade-down
+.fuck-you-down
 	&-enter-active
-		transition opacity 0.4s 1.65s ease-out, transform 0.4s 1.65s ease-out
+		transition opacity 0.4s ease-out, transform 1.4s ease-out
+		// &.logo
+		// 	transition opacity 0.4s 1.65s ease-out, transform 0.4s 5s ease-out !important
 	&-leave-active
 		transition opacity 0s ease-out
 	&-enter
 	&-leave-to
 		opacity 0
-		transform translateY(-100%)
-	&-leave-to
-		transform translateY(0)
+		transform translateY(-5520%)
 	&-enter-to
 	&-leave
 		opacity 1
@@ -476,8 +501,13 @@ li
 		user-select none
 		tap-highlight-color transparent
 	.logo
-		max-width 174px
-		max-height 70%
+		opacity 0
+		transform translateY(-200%)
+		height 25px
+		transition opacity 0.4s 0.6s ease-out, transform 0.4s 0.6s ease-out
+		&.show
+			opacity 1
+			transform translateY(0)
 	+below(1025px)
 		border-radius rad
 		background: var(--bg-color-closed);
@@ -501,12 +531,13 @@ li
 
 		background: linear-gradient(
 			to bottom,
-			white, white 10%,
-			transparent 10%, transparent 45%,
+			white, white 14%,
+			transparent 14%, transparent 45%,
 			white 45%, white 55%,
 			transparent 55%, transparent 90%,
 			white 90%, white 100%
 		);
+		backface-visibility hidden
 		transition opacity 0.2s ease-out
 		&.show
 			opacity 1
@@ -591,6 +622,8 @@ li
 				justify-content flex-end
 				+below(1025px)
 					flex-direction column
+					justify-content flex-start
+
 				li
 					flex 1
 					flex-basis auto
@@ -605,7 +638,7 @@ li
 						text-transform uppercase
 						margin-bottom 2vh
 					+below(815px, orientation: landscape)
-						font-size
+						font-size 5vh
 					&:after
 						content ''
 						center(horizontal)
@@ -613,7 +646,7 @@ li
 						height 1px
 						width 0
 						background: var(--item-border-color);
-						transition width 0.2s easeOutBack
+						transition width 0.2s ease-out
 					&.active
 						color: var(--item-active-color);
 						&:after

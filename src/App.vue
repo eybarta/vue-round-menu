@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<round-menu :menu="menuArr" bg-color-closed="#ff6600"></round-menu>
+		<round-menu :menu="menuArr" bg-color-closed="#ff0000"></round-menu>
 		<section v-for="item in menuArr" :key="item" :id="itemId(item)">
 			<h4 v-text="item"></h4>
 		</section>
