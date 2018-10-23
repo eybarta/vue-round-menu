@@ -397,7 +397,7 @@ export default {
 			let trig = this.resizeTrig;
 			let maxSize = Math.max(document.documentElement.clientWidth, document.documentElement.clientHeight),
 				minSize = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight);
-				return maxSize>1024 && minSize>670
+				return maxSize>1024 && minSize>450
 		},
 		isPortrait() {
 			let trig = this.resizeTrig;
