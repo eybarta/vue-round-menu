@@ -214,6 +214,7 @@ export default {
 			}
 			else {
 				// IS DEVICES...
+				console.log("VIEWPORT HEIGHT>> ", this.viewportHeight);
 				this.menuanim
 				.add({
 					targets: this.$el,
@@ -421,7 +422,7 @@ export default {
 		},
 		viewportHeight() {
 			let trig = this.resizeTrig;
-			return Math.min(document.documentElement.clientHeight, window.innerHeight || 0)
+			return Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
 		},
 		scrollPosition() {
 			let trig = this.resizeTrig + this.scrollTrig;
