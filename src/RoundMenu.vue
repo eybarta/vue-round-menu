@@ -59,6 +59,10 @@ export default {
 				type: Array,
 				required: true
 			},
+			autoOpenTop: {
+				type: Boolean,
+				default: true
+			},
 			bgColorClosed: {
 				type: String,
 				default: "#0e75bb"
@@ -113,6 +117,7 @@ export default {
 		window.addEventListener('resize', this.resizeHandler);
 		this.initAnime();
 		this.stylusizeJSVariables()
+		this.checkPosition();
 	},
 	methods: {
 		stylusizeJSVariables() {
@@ -351,7 +356,7 @@ export default {
 			this.inAnchorscroll = true;
 		},
 		checkPosition() {
-			if (this.isDesktop && this.activeitem==='home' && this.scrollPosition<200) {
+			if (this.autoOpenTop && this.isDesktop && this.activeitem==='home' && this.scrollPosition<200) {
 				this.openMenu();
 			}
 			else {
