@@ -100,6 +100,7 @@ export default {
 			showMenuItems: false,
 			showLogo: false,
 			inAnchorscroll: false,
+			closing: false,
 			timers: {
 				openmenu: -1,
 				closemenu: -1,
@@ -318,7 +319,7 @@ export default {
 			}
 		},
 		openMenuAfter() {
-			if (this.mode==='open') {
+			if (this.mode==='open' && !this.closing) {
 				this.showHamburger = true;
 				this.showMenuItems = true;
 				this.showLogo = true;
@@ -327,6 +328,7 @@ export default {
 		closeMenu() {
 			if (this.mode!=='closed') {
 				this.clearAllTimers();
+				this.closing = true;
 				this.showMenuItems = false;
 				this.showHamburger = false;
 				this.timers.closemenu = setTimeout(function() {
@@ -336,6 +338,7 @@ export default {
 					this.menuanim.play()
 					this.menuanim.reverse()
 					this.timers.hamburger = setTimeout(function() {
+						this.closing = false;
 						this.showHamburger = true;
 					}.bind(this), 750)
 

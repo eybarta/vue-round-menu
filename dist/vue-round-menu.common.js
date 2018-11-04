@@ -1161,12 +1161,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules//.cache//vue-loader","cacheIdentifier":"0076eba9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=2597453b&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules//.cache//vue-loader","cacheIdentifier":"0076eba9-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=7ba7f661&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['menu', _vm.mode],on:{"click":_vm.toggleMenu}},[(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e(),_c('div',{staticClass:"menu--mid"},[(true)?_c('div',{key:"hamburger",ref:"hamb",class:['hamburger', _vm.showHamburger ? 'show' : '']}):undefined,(!!_vm.logo && _vm.mode==='open')?_c('img',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:'#home', onDone: _vm.anchorScrollCB, offset:1}),expression:"{el:'#home', onDone: anchorScrollCB, offset:1}"}],key:"logo",class:['logo', _vm.showLogo ? 'show' : ''],attrs:{"src":_vm.logo,"alt":_vm.menu.label,"title":_vm.menu.label}}):_vm._e(),_c('transition-group',{key:"menu",attrs:{"tag":"ul","name":"stag-down","appear":""}},_vm._l((_vm.menu),function(item){return (_vm.showMenuItems)?_c('li',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:("#" + (_vm.anchorify(item))), onStart: _vm.anchorScrollStart, onDone: _vm.anchorScrollCB, offset: item.offset || 1}),expression:"{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"}],key:item.label || item,class:[_vm.activeitem===(item.anchor||_vm.trimify(item)) ? 'active' : ''],domProps:{"textContent":_vm._s(item.label || item)}}):_vm._e()}))],1),(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=2597453b&
+// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=7ba7f661&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.anchor.js
 var es6_string_anchor = __webpack_require__("8449");
@@ -2547,6 +2547,10 @@ var throttle = function throttle(func) {
       type: Array,
       required: true
     },
+    autoOpenTop: {
+      type: Boolean,
+      default: true
+    },
     bgColorClosed: {
       type: String,
       default: "#0e75bb"
@@ -2584,6 +2588,7 @@ var throttle = function throttle(func) {
       showMenuItems: false,
       showLogo: false,
       inAnchorscroll: false,
+      closing: false,
       timers: {
         openmenu: -1,
         closemenu: -1,
@@ -2601,6 +2606,7 @@ var throttle = function throttle(func) {
     window.addEventListener('resize', this.resizeHandler);
     this.initAnime();
     this.stylusizeJSVariables();
+    this.checkPosition();
   },
   methods: {
     stylusizeJSVariables: function stylusizeJSVariables() {
@@ -2783,7 +2789,7 @@ var throttle = function throttle(func) {
       }
     },
     openMenuAfter: function openMenuAfter() {
-      if (this.mode === 'open') {
+      if (this.mode === 'open' && !this.closing) {
         this.showHamburger = true;
         this.showMenuItems = true;
         this.showLogo = true;
@@ -2792,6 +2798,7 @@ var throttle = function throttle(func) {
     closeMenu: function closeMenu() {
       if (this.mode !== 'closed') {
         this.clearAllTimers();
+        this.closing = true;
         this.showMenuItems = false;
         this.showHamburger = false;
         this.timers.closemenu = setTimeout(function () {
@@ -2801,6 +2808,7 @@ var throttle = function throttle(func) {
           this.menuanim.play();
           this.menuanim.reverse();
           this.timers.hamburger = setTimeout(function () {
+            this.closing = false;
             this.showHamburger = true;
           }.bind(this), 750);
         }.bind(this), 200);
@@ -2823,7 +2831,7 @@ var throttle = function throttle(func) {
       this.inAnchorscroll = true;
     },
     checkPosition: function checkPosition() {
-      if (this.isDesktop && this.activeitem === 'home' && this.scrollPosition < 200) {
+      if (this.autoOpenTop && this.isDesktop && this.activeitem === 'home' && this.scrollPosition < 200) {
         this.openMenu();
       } else {
         this.closeMenu();
