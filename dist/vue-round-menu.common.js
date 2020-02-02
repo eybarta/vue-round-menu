@@ -1668,12 +1668,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"763b6b7b-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=269b6ce2&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"77d0bf58-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=74760a86&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['menu', _vm.mode],on:{"click":_vm.toggleMenu}},[(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e(),_c('div',{staticClass:"menu--mid"},[(true)?_c('div',{key:"hamburger",ref:"hamb",class:['hamburger', _vm.showHamburger ? 'show' : '']}):undefined,(!!_vm.logo && _vm.mode==='open')?_c('img',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:'#home', onDone: _vm.anchorScrollCB, offset:1}),expression:"{el:'#home', onDone: anchorScrollCB, offset:1}"}],key:"logo",class:['logo', _vm.showLogo ? 'show' : ''],attrs:{"src":_vm.logo,"alt":_vm.menu.label,"title":_vm.menu.label}}):_vm._e(),(_vm.showMenuItems)?_c('transition-group',{key:"menu",attrs:{"tag":"ul","name":"stag-down","appear":""}},_vm._l((_vm.menu),function(item){return _c('li',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:("#" + (_vm.anchorify(item))), onStart: _vm.anchorScrollStart, onDone: _vm.anchorScrollCB, offset: item.offset || 1}),expression:"{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"}],key:item.label || item,class:[_vm.activeitem===(item.anchor||_vm.trimify(item)) ? 'active' : ''],domProps:{"textContent":_vm._s(item.label || item)}})}),0):_vm._e()],1),(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=269b6ce2&
+// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=74760a86&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.anchor.js
 var es6_string_anchor = __webpack_require__("8449");
@@ -3424,6 +3424,8 @@ var throttle = function throttle(func) {
       this.inAnchorscroll = true;
     },
     checkPosition: function checkPosition() {
+      console.log("checkPosition >> ", this.autoOpenTop, " :: ", this.isDesktop, " >>> ", this.scrollPosition);
+
       if (this.autoOpenTop && this.isDesktop && this.activeitem === 'home' && this.scrollPosition < 200) {
         this.openMenu();
       } else {
@@ -3431,8 +3433,8 @@ var throttle = function throttle(func) {
       }
     },
     scrollHandler: throttle(function () {
-      console.log("SCROOL HANDLER >> ");
       this.scrollTrig = new Date().getTime();
+      console.log("SCROOL HANDLER >> ", this.scrollTrig, " :: ", this.resizeTrig);
 
       if (this.scrollTrig - this.resizeTrig > 500) {
         var sections = this.sectionOffsets;
