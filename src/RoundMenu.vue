@@ -110,12 +110,12 @@ export default {
 		}
 	},
 	destroyed() {
-		window.removeEventListener('scroll', this.scrollHandler);
-		window.removeEventListener('resize', this.resizeHandler);
+		window.removeEventListener('scroll.rm', this.scrollHandler);
+		window.removeEventListener('resize.rm', this.resizeHandler);
 	},
 	mounted() {
-		window.addEventListener('scroll', this.scrollHandler);
-		window.addEventListener('resize', this.resizeHandler);
+		window.addEventListener('scroll.rm', this.scrollHandler);
+		window.addEventListener('resize.rm', this.resizeHandler);
 		this.initAnime();
 		this.stylusizeJSVariables()
 		this.checkPosition();
