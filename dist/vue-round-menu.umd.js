@@ -305,6 +305,33 @@ module.exports = function (it) {
 
 /***/ }),
 
+/***/ "24aa":
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
 /***/ "2aba":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -597,7 +624,7 @@ n)k=l;else{var l=h,h=h+.1,g=0;do m=l+(h-l)/2,n=a(m,c,b)-k,0<n?h=m:l=m;while(1e-7
 d:A.apply($jscomp$this,d)}}(f)),f={type:f.type};return b}(),ha={css:function(a,c,d){return a.style[c]=d},attribute:function(a,c,d){return a.setAttribute(c,d)},object:function(a,c,d){return a[c]=d},transform:function(a,c,d,b,f){b[f]||(b[f]=[]);b[f].push(c+"("+d+")")}},v=[],B=0,ia=function(){function a(){B=requestAnimationFrame(c)}function c(c){var b=v.length;if(b){for(var d=0;d<b;)v[d]&&v[d].tick(c),d++;a()}else cancelAnimationFrame(B),B=0}return a}();q.version="2.2.0";q.speed=1;q.running=v;q.remove=
 function(a){a=P(a);for(var c=v.length;c--;)for(var d=v[c],b=d.animations,f=b.length;f--;)u(a,b[f].animatable.target)&&(b.splice(f,1),b.length||d.pause())};q.getValue=K;q.path=function(a,c){var d=h.str(a)?e(a)[0]:a,b=c||100;return function(a){return{el:d,property:a,totalLength:N(d)*(b/100)}}};q.setDashoffset=function(a){var c=N(a);a.setAttribute("stroke-dasharray",c);return c};q.bezier=A;q.easings=Q;q.timeline=function(a){var c=q(a);c.pause();c.duration=0;c.add=function(d){c.children.forEach(function(a){a.began=
 !0;a.completed=!0});m(d).forEach(function(b){var d=z(b,D(S,a||{}));d.targets=d.targets||a.targets;b=c.duration;var e=d.offset;d.autoplay=!1;d.direction=c.direction;d.offset=h.und(e)?b:L(e,b);c.began=!0;c.completed=!0;c.seek(d.offset);d=q(d);d.began=!0;d.completed=!0;d.duration>b&&(c.duration=d.duration);c.children.push(d)});c.seek(0);c.reset();c.autoplay&&c.restart();return c};return c};q.random=function(a,c){return Math.floor(Math.random()*(c-a+1))+a};return q});
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("c8ba")))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("24aa")))
 
 /***/ }),
 
@@ -1003,33 +1030,6 @@ module.exports = function (it) {
 module.exports = !__webpack_require__("9e1e") && !__webpack_require__("79e5")(function () {
   return Object.defineProperty(__webpack_require__("230e")('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
-
-
-/***/ }),
-
-/***/ "c8ba":
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
 
 
 /***/ }),
@@ -1677,12 +1677,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d3c6910c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=2b0bf475&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['menu', _vm.mode],on:{"click":_vm.toggleMenu}},[(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e(),_c('div',{staticClass:"menu--mid"},[(true)?_c('div',{key:"hamburger",ref:"hamb",class:['hamburger', _vm.showHamburger ? 'show' : '']}):undefined,(!!_vm.logo && _vm.mode==='open')?_c('img',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:'#home', onDone: _vm.anchorScrollCB, offset:1}),expression:"{el:'#home', onDone: anchorScrollCB, offset:1}"}],key:"logo",class:['logo', _vm.showLogo ? 'show' : ''],attrs:{"src":_vm.logo,"alt":_vm.menu.label,"title":_vm.menu.label}}):_vm._e(),_c('transition-group',{key:"menu",attrs:{"tag":"ul","name":"stag-down","appear":""}},_vm._l((_vm.menu),function(item){return (_vm.showMenuItems)?_c('li',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:("#" + (_vm.anchorify(item))), onStart: _vm.anchorScrollStart, onDone: _vm.anchorScrollCB, offset: item.offset || 1}),expression:"{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"}],key:item.label || item,class:[_vm.activeitem===(item.anchor||_vm.trimify(item)) ? 'active' : ''],domProps:{"textContent":_vm._s(item.label || item)}}):_vm._e()}),0)],1),(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"763b6b7b-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/RoundMenu.vue?vue&type=template&id=269b6ce2&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['menu', _vm.mode],on:{"click":_vm.toggleMenu}},[(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e(),_c('div',{staticClass:"menu--mid"},[(true)?_c('div',{key:"hamburger",ref:"hamb",class:['hamburger', _vm.showHamburger ? 'show' : '']}):undefined,(!!_vm.logo && _vm.mode==='open')?_c('img',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:'#home', onDone: _vm.anchorScrollCB, offset:1}),expression:"{el:'#home', onDone: anchorScrollCB, offset:1}"}],key:"logo",class:['logo', _vm.showLogo ? 'show' : ''],attrs:{"src":_vm.logo,"alt":_vm.menu.label,"title":_vm.menu.label}}):_vm._e(),(_vm.showMenuItems)?_c('transition-group',{key:"menu",attrs:{"tag":"ul","name":"stag-down","appear":""}},_vm._l((_vm.menu),function(item){return _c('li',{directives:[{name:"scroll-to",rawName:"v-scroll-to",value:({el:("#" + (_vm.anchorify(item))), onStart: _vm.anchorScrollStart, onDone: _vm.anchorScrollCB, offset: item.offset || 1}),expression:"{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"}],key:item.label || item,class:[_vm.activeitem===(item.anchor||_vm.trimify(item)) ? 'active' : ''],domProps:{"textContent":_vm._s(item.label || item)}})}),0):_vm._e()],1),(_vm.isDesktop)?_c('span',{staticClass:"menu--half"}):_vm._e()])}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=2b0bf475&
+// CONCATENATED MODULE: ./src/RoundMenu.vue?vue&type=template&id=269b6ce2&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.anchor.js
 var es6_string_anchor = __webpack_require__("8449");
@@ -3198,12 +3198,14 @@ var throttle = function throttle(func) {
     };
   },
   destroyed: function destroyed() {
-    window.removeEventListener('scroll.rm', this.scrollHandler);
-    window.removeEventListener('resize.rm', this.resizeHandler);
+    window.removeEventListener('scroll', this.scrollHandler);
+    window.removeEventListener('resize', this.resizeHandler);
   },
   mounted: function mounted() {
-    window.addEventListener('scroll.rm', this.scrollHandler);
-    window.addEventListener('resize.rm', this.resizeHandler);
+    window.addEventListener('scroll', this.scrollHandler, {
+      passive: true
+    });
+    window.addEventListener('resize', this.resizeHandler);
     this.initAnime();
     this.stylusizeJSVariables();
     this.checkPosition();
@@ -3438,6 +3440,7 @@ var throttle = function throttle(func) {
       }
     },
     scrollHandler: throttle(function () {
+      console.log("SCROOL HANDLER >> ");
       this.scrollTrig = new Date().getTime();
 
       if (this.scrollTrig - this.resizeTrig > 500) {

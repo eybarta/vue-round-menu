@@ -12,9 +12,9 @@
 			:src="logo"
 			:alt="menu.label"
 			:title="menu.label" />
-		<transition-group key="menu" tag="ul" name="stag-down" appear>
+		<transition-group v-if="showMenuItems" key="menu" tag="ul" name="stag-down" appear>
 				<li
-					v-if="showMenuItems"
+					
 					v-for="item in menu"
 					:key="item.label || item"
 					v-text="item.label || item"
@@ -110,12 +110,12 @@ export default {
 		}
 	},
 	destroyed() {
-		window.removeEventListener('scroll.rm', this.scrollHandler);
-		window.removeEventListener('resize.rm', this.resizeHandler);
+		window.removeEventListener('scroll', this.scrollHandler);
+		window.removeEventListener('resize', this.resizeHandler);
 	},
 	mounted() {
-		window.addEventListener('scroll.rm', this.scrollHandler);
-		window.addEventListener('resize.rm', this.resizeHandler);
+		window.addEventListener('scroll', this.scrollHandler, { passive: true });
+		window.addEventListener('resize', this.resizeHandler);
 		this.initAnime();
 		this.stylusizeJSVariables()
 		this.checkPosition();
@@ -367,6 +367,7 @@ export default {
 			}
 		},
 		scrollHandler: throttle(function() {
+			console.log("SCROOL HANDLER >> ");
 			this.scrollTrig = new Date().getTime()
 			if (this.scrollTrig-this.resizeTrig>500) {
 				let sections = this.sectionOffsets;
