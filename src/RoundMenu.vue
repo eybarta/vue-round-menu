@@ -368,8 +368,8 @@ export default {
 			}
 		},
 		scrollHandler: throttle(function() {
-			console.log("SCROOL HANDLER >> ");
 			this.scrollTrig = new Date().getTime()
+			console.log("SCROOL HANDLER >> ", this.scrollTrig, " :: ", this.resizeTrig);
 			if (this.scrollTrig-this.resizeTrig>500) {
 				let sections = this.sectionOffsets;
 				let mid = this.viewportMid;
