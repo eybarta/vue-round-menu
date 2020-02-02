@@ -359,6 +359,7 @@ export default {
 			this.inAnchorscroll = true;
 		},
 		checkPosition() {
+			console.log("checkPosition >> ", this.autoOpenTop, " :: ", this.isDesktop, " >>> ", this.scrollPosition);
 			if (this.autoOpenTop && this.isDesktop && this.activeitem==='home' && this.scrollPosition<200) {
 				this.openMenu();
 			}
