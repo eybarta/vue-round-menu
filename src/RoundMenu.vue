@@ -6,22 +6,22 @@
 			<div v-if="true" key="hamburger" ref="hamb" :class="['hamburger', showHamburger ? 'show' : '']"></div>
 			<img
 			v-if="!!logo && mode==='open'"
+			v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}"
 			key="logo"
 			:class="['logo', showLogo ? 'show' : '']"
 			:src="logo"
 			:alt="menu.label"
 			:title="menu.label" />
-			<!-- v-scroll-to="{el:'#home', onDone: anchorScrollCB, offset:1}" -->
 		<transition-group v-if="showMenuItems" key="menu" tag="ul" name="stag-down" appear>
 				<li
 					
 					v-for="item in menu"
 					:key="item.label || item"
 					v-text="item.label || item"
+					v-scroll-to="{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}"
 					:class="[activeitem===(item.anchor||trimify(item)) ? 'active' : '']"
 					>
 				</li>
-					<!-- v-scroll-to="{el:`#${anchorify(item)}`, onStart: anchorScrollStart, onDone: anchorScrollCB, offset: item.offset || 1}" -->
 			</transition-group>
 		<!-- </div> -->
 </div>
@@ -114,7 +114,7 @@ export default {
 		window.removeEventListener('resize', this.resizeHandler);
 	},
 	mounted() {
-		window.addEventListener('scroll', this.scrollHandler, { passive: true });
+		window.addEventListener('scroll', this.scrollHandler);
 		window.addEventListener('resize', this.resizeHandler);
 		this.initAnime();
 		this.stylusizeJSVariables()
@@ -158,11 +158,11 @@ export default {
 			this.menuanim.complete = this.animComplete;
 			this.menuanim.begin = this.animeBegan;
 		},
-		// animeBegan(anim) {
-		// 	console.log("ANIM BEGAN > ", anim);
-		// },
+		animeBegan(anim) {
+			console.log("ANIM BEGAN > ", anim);
+		},
 		animComplete(anim) {
-			// console.log("ANIM COMPLETE > ", anim);
+			console.log("ANIM COMPLETE > ", anim);
 			this.openMenuAfter();
 		},
 		initAnime() {
@@ -220,7 +220,7 @@ export default {
 			}
 			else {
 				// IS DEVICES...
-				// console.log("VIEWPORT HEIGHT>> ", this.viewportHeight);
+				console.log("VIEWPORT HEIGHT>> ", this.viewportHeight);
 				this.menuanim
 				.add({
 					targets: this.$el,
@@ -344,7 +344,7 @@ export default {
 
 				}.bind(this), 200)
 				if (!!this.isMobile && !this.isPortait && !this.inAnchorscroll) {
-					// console.log("scroll to show menu");
+					console.log("scroll to show menu");
 					setTimeout(function() {
 						this.$scrollTo(this.$el, 200, {offset:-20})
 					}.bind(this), 1450)
@@ -359,7 +359,6 @@ export default {
 			this.inAnchorscroll = true;
 		},
 		checkPosition() {
-			// console.log("checkPosition >> ", this.autoOpenTop, " :: ", this.isDesktop, " :: ", this.activeitem, " >>> ", this.scrollPosition);
 			if (this.autoOpenTop && this.isDesktop && this.scrollPosition<200) {
 				this.openMenu();
 			}
@@ -368,8 +367,8 @@ export default {
 			}
 		},
 		scrollHandler: throttle(function() {
+			console.log("SCROOL HANDLER >> ");
 			this.scrollTrig = new Date().getTime()
-			// console.log("SCROOL HANDLER >> ", this.scrollTrig, " :: ", this.resizeTrig);
 			if (this.scrollTrig-this.resizeTrig>500) {
 				let sections = this.sectionOffsets;
 				let mid = this.viewportMid;
